@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 class Header extends React.Component{
     render(){
         return <header>
-            <h1>Header {this.props.name}</h1>
+            <h1> <span>Logo</span> </h1>
         </header>
     }
 }
