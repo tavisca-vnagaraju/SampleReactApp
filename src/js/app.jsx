@@ -2,10 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-const details = {
-    name:"peter",
-    age:15
-}
 let person1 = {
     name:"TS",
     first_name:"Tony",
@@ -26,6 +22,29 @@ let person3 = {
 }
 let persons = [person1,person2,person3];
 class App extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            name:"",
+            first_name:"",
+            last_name:"",
+            age:0
+        };
+    }
+    changeState(person){
+        this.setState({
+            name:person.name,
+            first_name:person.first_name,
+            last_name:person.last_name,
+            age:person.age
+        });
+        let detailsContainer = document.getElementById("details-container-id");
+        detailsContainer.style.display = "";
+    }
+    componentDidMount(){
+        let detailsContainer = document.getElementById("details-container-id");
+        detailsContainer.style.display = "none";
+    }
     render(){
         return <div className="main">
             <Header name="tony"/>
@@ -33,12 +52,12 @@ class App extends React.Component{
                 <div className="left-nav">
                     <ul>
                         {persons.map(person=>{
-                            return <Person person={person}/>
+                            return <Person onClickPerson={this.changeState.bind(this)} person={person}/>
                         })}
                     </ul>
                 </div>
                 <div className="details-container" id="details-container-id">
-                    
+                    <PersonDetails person={this.state}/>
                 </div>
             </div>
             <Footer/>
@@ -52,10 +71,7 @@ class Person extends React.Component{
         </li>
     }
     personClicked(){
-        console.log("personClicked");
-        console.log(this.props.person.name);
-        let detailsContainer = document.getElementById("details-container-id");
-        ReactDOM.render(<PersonDetails person={this.props.person}/>,detailsContainer);
+        this.props.onClickPerson(this.props.person);
     }
 }
 class PersonDetails extends React.Component{
@@ -64,15 +80,20 @@ class PersonDetails extends React.Component{
             <h1> Person Details : </h1>
             <div className="first-name">
                 <span> First Name </span>
-                <input type="text" value={this.props.person.first_name} />
+                <input type="text" value={this.props.person.first_name} id="first-name-id" />
             </div>
             <div className="last-name">
                 <span> Last Name </span>
-                <input type="text" value={this.props.person.last_name} />
+                <input type="text" value={this.props.person.last_name} id="last-name-id" />
             </div>
-            <button className="update-button"> Update </button>
+            <button className="update-button" onClick={this.updateClicked.bind(this)}> Update </button>
         </div>
-            
+    }
+    updateClicked(){
+        console.log("update Clicked");
+        this.props.person.first_name = document.getElementById("first-name-id").value;
+        this.props.person.last_name = document.getElementById("last-name-id").value;
+        console.log(this.props.person);
     }
 }
 const rootElement = document.getElementById("content");
