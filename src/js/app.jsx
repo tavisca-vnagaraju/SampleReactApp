@@ -3,18 +3,21 @@ import ReactDOM from "react-dom";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 let person1 = {
+    index:0,
     name:"TS",
     first_name:"Tony",
     last_name:"Stark",
     age:45
 }
 let person2 = {
+    index:1,
     name:"PP",
     first_name:"Peter",
     last_name:"Parker",
     age:16
 }
 let person3 = {
+    index:2,
     name:"SH",
     first_name:"Sherlock",
     last_name:"Holmes",
@@ -28,7 +31,8 @@ class App extends React.Component{
             name:"",
             first_name:"",
             last_name:"",
-            age:0
+            age:0,
+            index:0
         };
     }
     changeState(person){
@@ -36,7 +40,8 @@ class App extends React.Component{
             name:person.name,
             first_name:person.first_name,
             last_name:person.last_name,
-            age:person.age
+            age:person.age,
+            index:person.index
         });
         let detailsContainer = document.getElementById("details-container-id");
         detailsContainer.style.display = "";
@@ -44,6 +49,16 @@ class App extends React.Component{
     componentDidMount(){
         let detailsContainer = document.getElementById("details-container-id");
         detailsContainer.style.display = "none";
+    }
+    inputChangedHandlerFirstName(event){
+        this.setState({
+            first_name:event.target.value
+        })
+    }
+    inputChangedHandlerLastName(event){
+        this.setState({
+            last_name:event.target.value
+        })
     }
     render(){
         return <div className="main">
@@ -57,11 +72,31 @@ class App extends React.Component{
                     </ul>
                 </div>
                 <div className="details-container" id="details-container-id">
-                    <PersonDetails person={this.state}/>
+                    <h1> Person Details : </h1>
+                    <div className="first-name">
+                        <span> First Name </span>
+                        <input onChange={(event)=>this.inputChangedHandlerFirstName(event)} type="text" value={this.state.first_name} id="first-name-id" />
+                    </div>
+                    <div className="last-name">
+                        <span> Last Name </span>
+                        <input onChange={(event)=>this.inputChangedHandlerLastName(event)} type="text" value={this.state.last_name} id="last-name-id" />
+                    </div>
+                    <button className="update-button" onClick={this.updateClicked.bind(this)}> Update </button>
                 </div>
             </div>
             <Footer/>
         </div>;
+    }
+    updateClicked(){
+        let first_name_value = document.getElementById("first-name-id").value;
+        let last_name_value = document.getElementById("last-name-id").value;
+        let index = this.state.index;
+        persons[index].name = (first_name_value.substring(0,1)).concat("",last_name_value.substring(0,1));
+        persons[index].first_name = first_name_value;
+        persons[index].last_name = last_name_value;
+        const rootElement = document.getElementById("content");
+        ReactDOM.render(<App />,rootElement);
+        console.log(this.state);
     }
 }
 class Person extends React.Component{
@@ -72,28 +107,6 @@ class Person extends React.Component{
     }
     personClicked(){
         this.props.onClickPerson(this.props.person);
-    }
-}
-class PersonDetails extends React.Component{
-    render(){
-        return <div>
-            <h1> Person Details : </h1>
-            <div className="first-name">
-                <span> First Name </span>
-                <input type="text" value={this.props.person.first_name} id="first-name-id" />
-            </div>
-            <div className="last-name">
-                <span> Last Name </span>
-                <input type="text" value={this.props.person.last_name} id="last-name-id" />
-            </div>
-            <button className="update-button" onClick={this.updateClicked.bind(this)}> Update </button>
-        </div>
-    }
-    updateClicked(){
-        console.log("update Clicked");
-        this.props.person.first_name = document.getElementById("first-name-id").value;
-        this.props.person.last_name = document.getElementById("last-name-id").value;
-        console.log(this.props.person);
     }
 }
 const rootElement = document.getElementById("content");
